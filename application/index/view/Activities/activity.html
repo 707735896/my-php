@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>课堂活动</title>
+		<!--<link rel="stylesheet" type="text/css" href="http://www.jq22.com/jquery/bootstrap-3.3.4.css">
+		<link rel="stylesheet" type="text/css" href="http://www.jq22.com/jquery/font-awesome.4.6.0.css">-->
+		<link rel="stylesheet" href="/public/static/css/activity.css" />
+		<!--<link rel="stylesheet" type="text/css" href="/public/canvas/css/build.css">-->
+		<link rel="stylesheet" href="/public/canvas/css/green.css" />
+		<script type="text/javascript" src="/public/canvas/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/public/canvas/js/icheck.min.js"></script>
+        <script type="text/javascript" src="/public/static/js/qwebchannel.js"></script>
+		<script>
+			$(function() {
+                var data = {
+                    id: getQueryStringByName("id"),
+                    path: getQueryStringByName("path")
+                };
+				$.ajax({
+					type: "get",
+					dataType: 'json',
+					url: "/index/getActivityXML",
+					async: true,
+                    data: data,
+					success: function(res) {
+                        if(res.code == "100") {
+                            $("#input-title").text(res.Activity.ActivityTitle);
+                            $(".activity-ms").append(res.Activity.ActivityContex);
+                            $(".CheckBoxSelectItemsUL").append(res.Activity.ActivityStudents);
+                            $("#attachmentListUL").append(res.Activity.ActivityAttachments);
+                        } else {
+                            alert("目录不存在");
+                        }
+                        $('input').iCheck({
+                            checkboxClass: 'icheckbox_square-green'
+                        });
+					}
+				});
+
+                //获取url参数值
+                function getQueryStringByName(name) {
+                    var result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+                    if(result == null || result.length < 1) {
+                        return "";
+                    }
+                    return result[1];
+                }
+			})
+		</script>
+	</head>
+
+	<body id="newsubject-body" uuid="{$uuid}">
+		<form ng-controller="uploadController" onsubmit="return false" id="frm" method="post">
+			<ul>
+				<li>
+					<label for="input-title" class="lblname">活动主题</label>
+					<span type="text" id="input-title" class="input right-layout"></span>
+				</li>
+				<li>
+					<label for="editor" class="lblname">活动描述</label>
+					<div class="activity-ms">
+                        <!--<span>54564654564564564564655456465456456456456465545646545645645645646554564654564564564564655456465456456456456465545646545645645645646554564654564564564564655456465456456456456465545646545645645645646554564654564564564564655456465456456456456465</span>
+                        <!--<img src="/public/uploads/subjects/e729613f-1d57-4886-9261-a7959cd2fb1d/Images/StandardAnswer.jpg"/>-->
+					</div>
+				</li>
+				<li class="student-li" style="display:none">
+					<label for="input-title" class="lblname">参与学生</label>
+					<div class="student-lists">
+						<ul class="CheckBoxSelectItemsUL">
+                            <!--<li><input type="checkbox" class="styled" id="inlineCheckbox1" value="张1"><label for="inlineCheckbox1" class="label-select">张1</label></li>
+                            <li><input type="checkbox" class="styled" id="inlineCheckbox2" value="张2"><label for="inlineCheckbox2" class="label-select">张2</label></li>
+                            <li><input type="checkbox" class="styled" id="inlineCheckbox3" value="张3"><label for="inlineCheckbox3" class="label-select">张3</label></li>
+                            <li><input type="checkbox" class="styled" id="inlineCheckbox4" value="张4"><label for="inlineCheckbox4" class="label-select">张4</label></li>-->
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <label class="lblname">活动附件</label>
+                    <ul id="attachmentListUL">
+                        <!--<li><span class="test">临时活动.ppt</span></li>
+                        <li><span>临时活动.ppt</span></li>
+                        <li><span>临时活动.ppt</span></li>
+                        <li><span>临时活动.ppt</span></li>
+                        <li><span>临时活动.ppt</span></li>-->
+					</ul>
+				</li>
+			</ul>
+            <!--<div>
+                <a onclick="js_StartActivity(1)">提交</a>
+            </div> -->
+		</form>
+		<script>
+			//开始活动
+			function js_StartActivity(startId) {
+                console.log(startId);
+                var str = "";
+                var ids = "";
+                $("input[class='styled']:checkbox").each(function() {
+                    if(true == $(this).is(':checked')) {
+                        str += $(this).val() + ",";
+                    }
+                });
+                if(str.substr(str.length - 1) == ',') {
+                    ids = str.substr(0, str.length - 1);
+                }
+                //				console.log(ids);
+                //alert(ids);
+			}
+			function AttachmentClick(obj) {
+			    var path = $(obj).find('input').val();
+			    new QWebChannel(qt.webChannelTransport, function (channel) {
+			        var Dialog = channel.objects.Dialog;
+			        Dialog.cpp_ShowAttachment(path);
+			    });
+
+            }
+			$(".test").on('click', function() {
+				var str = "";
+				var ids = "";
+				$("input[class='styled']:checkbox").each(function() {
+					if(true == $(this).is(':checked')) {
+						str += $(this).val() + ",";
+					}
+				});
+				if(str.substr(str.length - 1) == ',') {
+					ids = str.substr(0, str.length - 1);
+				}
+				//				console.log(ids);
+                alert(ids);
+			})
+		</script>
+	</body>
+
+</html>

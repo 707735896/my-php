@@ -1,0 +1,52 @@
+#newsubject-body .lblname {
+  width: 90px; }
+
+.inputfile-btn {
+  display: inline-block;
+  width: 40px;
+  line-height: 25px;
+  height: 25px;
+  background: url("../images/selectfile.png") no-repeat;
+  background-size: contain;
+  position: absolute;
+  cursor: pointer;
+  margin-left: 15px;
+  overflow: hidden; }
+  .inputfile-btn input {
+    outline: none;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    opacity: 0;
+    cursor: pointer; }
+
+#preview-right {
+  margin-left: 90px;
+  width: 94.56522%;
+  height: 445px;
+  position: relative; }
+  #preview-right .left,
+  #preview-right .right {
+    display: inline-block;
+    position: relative;
+    text-align: center;
+    width: 49.42529%; }
+    #preview-right .left > p,
+    #preview-right .right > p {
+      margin-top: 20px; }
+    #preview-right .left .box,
+    #preview-right .right .box {
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      overflow-y: auto;
+      display: block;
+      height: 100%; }
+      #preview-right .left .box img,
+      #preview-right .right .box img {
+        max-width: 100%;
+        display: block;
+        margin: auto; }
+  #preview-right .right {
+    float: right; }
+
+/*# sourceMappingURL=exam.css.map */

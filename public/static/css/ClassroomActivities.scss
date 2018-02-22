@@ -1,0 +1,97 @@
+.student-li {
+    height: 60px;
+}
+
+#attachmentListUL {
+    padding-top: 10px;
+    overflow: hidden;
+    clear: both;
+
+    li {
+        width: 32%;margin-bottom: 5px;
+        float: left;
+
+        span {
+            float: left;margin-right: 5px;
+        }
+
+        .del-btn {
+            cursor: pointer;
+        }
+    }
+}
+
+.student-lists {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+
+    .CheckBoxSelectItemsUL {
+        width: 85%;
+        clear: both;
+        position: relative;
+        height: 66px;
+        overflow-y: scroll;
+        padding-left: 100px;
+
+        li {
+            text-align: center;
+            display: inline-block;
+            line-height: 35px;
+            width: 9%;
+            position: relative;
+            font-size: 16px;
+
+            .close-btn {
+                position: absolute;
+                top: -5px;
+                font-size: 25px;
+                right: 0;
+                color: #f65a34;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .select-more {
+        position: absolute;
+        right: 2%;
+        top: 30%;
+        cursor: pointer;
+    }
+}
+/**
+     * 选择附件
+ */
+.sellectfile {
+    width: 90%;
+
+    .sellectfile-box {
+        width: 95%;
+        padding: 0 5px;
+        box-sizing: border-box;
+        float: left;
+        font-size: 12px;
+        border: 1px solid #CFCFCF;
+        color: #a5a0a0;
+        height: 30px;
+        line-height: 30px;
+        position: relative;
+
+        input {
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            cursor: pointer;
+            left: 0;
+        }
+    }
+
+    .selectfile-btn {
+        cursor: pointer;
+        float: right;
+    }
+}

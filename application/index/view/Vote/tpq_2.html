@@ -1,0 +1,203 @@
+<!DOCTYPE >
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>投票器</title>
+		<link href="/public/canvas/css/canvas.css" type="text/css" rel="Stylesheet">
+	</head>
+
+	<body>
+		<div id="bar-main" style="width: 100%;height: 300px;margin-top: 0;margin-left: 0;"></div>
+		<script type="text/javascript" src="/public/canvas/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/public/canvas/js/echarts.min.js"></script>
+		<script>
+			var candicate = ['A', 'B', 'C', 'D'];
+
+			var ChartData = {};
+
+			var _data = ['0', '0', '0', '0'];
+
+			var myChart;
+
+			var option;
+
+			var studentAnswers = [];
+
+			$(function() {
+
+				/**
+				 * 统计图
+				 */
+				// 基于准备好的dom，初始化echarts实例
+				myChart = echarts.init(document.getElementById('bar-main'));
+				// 指定图表的配置项和数据
+				option = {
+					title: {
+//						text: '投票器',
+						textStyle: {
+							fontSize: 14,
+							fontWeight: "normal"
+						}
+					},
+					tooltip: {
+						formatter: function(params, ticket, callback) {
+							return params.data.names;
+						},
+					},
+					xAxis: {
+						data: candicate
+					},
+					yAxis: {
+						splitNumber: 3
+					},
+					series: [{
+						name: '人数',
+						type: 'bar',
+						barWidth: 30,
+						itemStyle: {
+							normal: {
+								color: function(params) {
+									var colorList = [
+										'#C1232B', '#B5C334', '#FCCE10', '#E87C25', '#27727B',
+										'#FE8463', '#9BCA63', '#FAD860', '#F3A43B', '#60C0DD',
+										'#D7504B', '#C6E579', '#F4E001', '#F0805A', '#26C0C0'
+									];
+									return colorList[params.dataIndex]
+								},
+								label: {
+									show: true,
+									position: 'top',
+									formatter: '{c}'
+								}
+							}
+						},
+						data: _data
+					}]
+				};
+				// 使用刚指定的配置项和数据显示图表。
+				myChart.setOption(option);
+
+			});
+
+			//更改选项
+			function js_modifyOption(studentOption) {
+				//js_modifyOption({"title_1":"A","title_2":"B","title_3":"C"})
+				candicate.splice(0, candicate.length);
+				_data.splice(0, _data.length);
+				$.each(studentOption, function(key, val) {
+					candicate.push(studentOption[key]);
+					_data.push('0');
+				});
+				
+				myChart.setOption(option);
+			}
+
+			//发送学生答题接口
+			function js_studentOption(student) {
+				var stu;
+				$.each(studentAnswers, function(i, c) {
+					if(c.studentID == student.studentID) {
+						stu = student;
+					}
+				});
+				if(!stu) {
+					studentAnswers.push(student);
+				}
+				//排序
+				//				studentAnswers.sort(function(a, b) {
+				//					return a.answers.charCodeAt() - b.answers.charCodeAt();
+				//				});
+
+				for(var i = 0; i < candicate.length; i++) {
+					ChartData[candicate[i]] = {
+						count: 0,
+						names: '',
+						data: []
+					}
+				}
+				$.each(studentAnswers, function(i, c) {
+					for(var i = 0; i < candicate.length; i++) {
+						if(c.answers == '1') {
+							c.answers = candicate[0];
+						}
+						if(c.answers == '2') {
+							c.answers = candicate[1];
+						}
+						if(c.answers == '3') {
+							c.answers = candicate[2];
+						}
+						if(c.answers == '4') {
+							c.answers = candicate[3];
+						}
+						if(c.answers == '5') {
+							c.answers = candicate[4];
+						}
+						if(c.answers == '6') {
+							c.answers = candicate[5];
+						}
+
+						for(var j = 0; j < c.answers.length; j++) {
+							for(var i = 0; i < candicate.length; i++) {
+								if(c.answers[j] == candicate[i]) {
+									ChartData[candicate[i]].count++;
+									if(ChartData[candicate[i]].count % 10) {
+										ChartData[candicate[i]].names += '&nbsp;&nbsp;' + c.studentName + '&nbsp;&nbsp;';
+									} else {
+										ChartData[candicate[i]].names += c.studentName + '&nbsp;&nbsp;</br>';
+									}
+									ChartData[candicate[i]].data.push(c);
+								}
+
+							}
+						}
+					}
+				});
+				option.series[0].data = [];
+				for(var i = 0; i < candicate.length; i++) {
+					option.series[0].data.push({
+						names: ChartData[candicate[i]].names,
+						value: ChartData[candicate[i]].count
+					})
+				}
+				myChart.setOption(option);
+
+			}
+
+			$(function() {
+				js_modifyOption({
+					"title_1": "的",
+					"title_2": "不",
+					"title_3": "啊",
+					"title_4": "多少"
+				})
+				js_studentOption({
+					studentID: 7,
+					studentName: "刘焕辉",
+					answers: ['1','2']
+				})
+				js_studentOption({
+					studentID: 47,
+					studentName: "刘焕辉",
+					answers: ['1','2']
+				})
+				js_studentOption({
+					studentID: 5,
+					studentName: "刘焕辉",
+					answers: ['1','2']
+				})
+				js_studentOption({
+					studentID: 1,
+					studentName: "刘焕辉",
+					answers: ['1','2']
+				})
+				js_studentOption({
+					studentID: 11,
+					studentName: "刘焕辉",
+					answers: ['1','2']
+				})
+			})
+		</script>
+	</body>
+
+</html>

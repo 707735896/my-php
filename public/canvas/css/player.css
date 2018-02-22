@@ -1,0 +1,90 @@
+.modal-content {
+	border-radius: 10px;
+}
+
+.modal-header {
+	color: #ffffff;
+	background: #24b33f;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	font-size: 22px;
+	font-weight: bold;
+}
+
+.close {
+	color: #ff5341;
+	font-size: 28px;
+	text-shadow: 0 1px 0 #ff5341;
+	opacity: 1;
+}
+
+.close:hover {
+	opacity: 1;
+	color: #ff5341;
+}
+
+.modal-dialog {
+	/*width: 1200px;*/
+	margin: 0px auto;
+}
+
+.canvasParent {
+	height: 600px;
+}
+
+.modal-footer {
+	border-top: 0;
+	background: #e7fae4;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+#alltime {
+	display: inline-block;
+	color: #54c136;
+	float: right;
+	font-size: 16px;
+	margin-top: 0.5%;
+}
+
+.fgf {
+	display: inline-block;
+	float: right;
+	margin: 7px 5px;
+	color: #54c136;
+	font-size: 16px;
+}
+
+#begintime {
+	display: inline-block;
+	color: #54c136;
+	margin-top: 0.5%;
+	font-size: 16px;
+	margin-left: 35px;
+}
+
+.operation {
+	display: inline-block;
+	float: left;
+	/*margin-left: 25px;*/
+}
+
+.operation img {
+	cursor: pointer;
+	margin-left: 10px;
+}
+
+
+/* 给时间轴加背景色   如果背景为白则看不出时间轴*/
+
+#ex1Slider .slider-selection {
+	background: #8ce064;
+}
+
+.ex1 {
+	width: 840px;
+	height: 17px;
+	display: inline-block;
+	float: left;
+	margin-top: 1%;
+}

@@ -1,0 +1,163 @@
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>新增判断题</title>
+		<link rel="stylesheet" href="/public/static/css/newsubject.css" />
+		<!--<meta name="viewport" content="target-densitydpi=device-dpi,width=1580,user-scalable=no" />-->
+		<script type="text/javascript" charset="utf-8" src="__UEDITOR__/ueditor.config.js"></script>
+		<script type="text/javascript" charset="utf-8" src="__UEDITOR__/ueditor.all.min.js"></script>
+		<script type="text/javascript" src="/public/static/js/qwebchannel.js"></script>
+
+		<!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
+		<!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+		<script type="text/javascript" charset="utf-8" src="__UEDITOR__/lang/zh-cn/zh-cn.js"></script>
+	</head>
+
+	<body id="newsubject-body" uuid="{$uuid}">
+		<form id="frm" action="{:url('Subjectsave/savepd')}" method="post" onkeydown="if(event.keyCode==13){return false;}">
+			<ul>
+				<li>
+					<label for="input-title" class="lblname">标题：</label>
+					<input type="text" id="input-title" value="{$data['SubjectTitle']}" class="input" />
+				</li>
+				<li>
+					<label for="editor" class="lblname">题干：</label>
+					<script id="editor" type="text/plain">{$SubjectContexFile}</script>
+				</li>
+				<!--<li>
+					<label for="" class="lblname">选项：</label>
+					<ul class="selectItems">
+						<li><input name="seleitem" class="radio" type="radio" value="true" /> <label for="seleitemA">正确</label></li>
+						<li><input name="seleitem" class="radio" type="radio" value="false" /> <label for="seleitemB">错误</label></li>
+
+					</ul>
+				</li>-->
+			</ul>
+			<!-- 	<div>
+				<a onclick="submit()">提交</a>
+			</div> -->
+		</form>
+		<script src="/public/canvas/js/jquery.min.js"></script>
+		<!--<script src="/public/static/js/js-shortid.min.js"></script>-->
+				<script src="/public/static/js/funs.js"></script>
+
+		<script>
+			// jQuery(function($) {  
+var uuid = document.getElementById('newsubject-body').getAttribute('uuid');
+var ue = UE.getEditor('editor');
+ue.ready(function() {
+	ue.execCommand('serverparam', {
+		'uuid': uuid
+	});
+
+});
+
+function submit() {
+	var title = $('#input-title').val();
+	var content = ue.getContent();
+//	var seleitem = $('input[name="seleitem"]:checked').val();
+
+	if(!title || !content 
+//		|| !seleitem
+	) {
+		return alert('内容填写不完整!');
+	}
+	/**
+	 * [success description]
+	 * @param  {[type]} argument) {               			    		}    	} [description]
+	 * @return {[type]}           [description]
+	 */
+	$.ajax({
+		url: $('#frm').attr('action'),
+		type: 'post',
+		data: {
+			title: title,
+			content: content,
+//			rightkey: seleitem,
+			uuid: uuid
+		},
+		success: function(res) {
+			if(res.code == 100) {
+			var id=getQueryStringByName('id')?getQueryStringByName('id'):0;
+				  new QWebChannel(qt.webChannelTransport, function (channel){
+				    var Dialog = channel.objects.Dialog;
+                Dialog.cpp_SaveQuestion(res.path,id);
+               });
+			} else {
+				alert('添加失败！');
+			}
+		}
+	});
+
+}
+
+// })
+
+
+/*c++ & js*/
+/**
+ * c++点击添加按钮后调用此函数
+ */
+function js_ClickAddBtn() {
+	submit();
+}
+/**
+ * C++点击取消按钮调用此函数
+ */
+function js_Cancel() {
+
+	$.ajax({
+		type: 'post',
+		url: '/Index/delFile',
+		data:{uuid:uuid},
+		success: function(data, textStatus) {
+				new QWebChannel(qt.webChannelTransport, function (channel){
+				var Dialog = channel.objects.Dialog;
+ 				Dialog.cpp_CloseFrm();
+ 			});
+		},
+		error: function() {
+				new QWebChannel(qt.webChannelTransport, function (channel){
+				var Dialog = channel.objects.Dialog;
+ 				Dialog.cpp_CloseFrm();
+ 			});
+		}
+	});
+
+}
+
+/**
+ * C++点击保存按钮调用此函数生成json文件
+ */
+function js_SavaSubject(title, imagepath, type) {
+    var data = {
+        uuid: uuid,
+        title: title,
+        imagepath: imagepath,
+        type: type
+    };
+    $.ajax({
+        type: 'post',
+        url: '/Subjectsave/savePrtScr',
+        data:data,
+        success: function(res) {
+            if(res.code == 100) {
+                //alert(res.data);
+                var id=getQueryStringByName('id')?getQueryStringByName('id'):0;
+					new QWebChannel(qt.webChannelTransport, function (channel){
+				    var Dialog = channel.objects.Dialog;
+                Dialog.cpp_SaveQuestion(res.path,id);
+                });
+            } else {
+                alert('添加失败！');
+            }
+        }
+    });
+
+}
+		</script>
+
+	</body>
+
+</html>

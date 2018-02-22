@@ -1,0 +1,110 @@
+$Width: 1580px;
+* {
+    margin: 0;
+    padding: 0;
+}
+@mixin Calc($property, $px-values, $baseline-width:$Width) {
+    #{$property}: $px-values/$baseline-width*100%;
+}
+ul {
+    list-style: none;
+}
+#newsubject-body {
+    font-size: 18px;
+    max-width: 1580px;
+    font-family: "Microsoft YaHei";
+    margin: auto;
+    @include Calc('padding-top',36px);
+    box-sizing: border-box;
+    form {
+        @include Calc( 'width',1380px);
+        margin: auto;
+        >ul {
+            >li {
+                display: block;
+                position: relative;
+                clear: both;
+                @include Calc( 'margin-bottom',25px,1380px);
+                &:after{
+                    content: "";
+                    display: block;
+                    overflow: hidden;
+                    clear: both;
+                }
+            }
+        }
+    }
+    table {
+        width: 100%;
+    }
+    label {
+        color: #808080;
+        cursor: pointer;
+    }
+    input[type="radio"],
+    .radio {
+        width: 17px;
+        height: 17px;
+    }
+    .right-layout {
+        float: left;
+    }
+    .lblname {
+        float: left;
+        font-size: 18px;
+        text-align: right;
+        max-width: 90px;
+        margin-right: 2%;
+    }
+    .input {
+        height: 27px;
+        @include Calc( 'width',562px,1380px); //      border-radius: 4px;
+        border: 1px solid #CFCFCF;
+        outline: none;
+        padding-left: 4px;
+        box-sizing: border-box;
+    }
+    #editor {
+        @include Calc( 'width',1245px,1380px); //      margin-left: 90px;
+        //      min-height: 450px;
+        float: left;
+    }
+    .selectItems {
+        li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+    }
+    footer {
+        height: 52px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 9999;
+        width: 100%;
+        background: #f1fde7;
+        border-top: 1px solid #b9de9b;
+        border-bottom: 1px solid #b9de9b;
+        @include Calc( 'padding-right',102px,1380px);
+        box-sizing: border-box;
+        text-align: right;
+        display: table;
+        >div {
+            //          float: right;
+            display: table-cell;
+            vertical-align: middle;
+        }
+        button {
+            border-radius: 20px;
+            outline: none;
+            border: none;
+            width: 64px;
+            height: 38px;
+            @include Calc('margin-right',28px,1380px);
+            border: 2px solid #caf1ac;
+            background: #b1e793;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+    }
+}

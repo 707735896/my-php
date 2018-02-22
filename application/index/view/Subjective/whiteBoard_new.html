@@ -1,0 +1,34 @@
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>画图板</title>
+		<link href="/public/canvas/css/literallycanvas.css" rel="stylesheet">
+		<script src="/public/canvas/js/jquery.min.js"></script>
+		<script src="/public/canvas/js/react.js"></script>
+		<script src="/public/canvas/js/react-dom.js"></script>
+		<script src="/public/canvas/js/literallycanvas.js"></script>
+	</head>
+
+	<body>
+		<div class="my-drawing"></div>
+
+		<script>
+			$(function() {
+				var h = window.innerHeight;
+				$('.literally').css('min-height', h);
+				$('canvas').attr('height', h - 31);
+				$('canvas').css('height', h - 31);
+				$('.lc-picker').css('height', h);
+			})
+			LC.init(
+				document.getElementsByClassName('my-drawing')[0], {
+					imageURLPrefix: '/public/canvas/img',
+					tools: [LC.tools.Pencil, LC.tools.Eraser, LC.tools.Line,
+						LC.tools.Text, LC.tools.Pan
+					]
+				});
+		</script>
+	</body>
+
+</html>

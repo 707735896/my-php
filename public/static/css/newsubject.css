@@ -1,0 +1,87 @@
+* {
+  margin: 0;
+  padding: 0; }
+
+ul {
+  list-style: none; }
+
+#newsubject-body {
+  font-size: 18px;
+  max-width: 1580px;
+  font-family: "Microsoft YaHei";
+  margin: auto;
+  padding-top: 2.27848%;
+  box-sizing: border-box; }
+  #newsubject-body form {
+    width: 87.34177%;
+    margin: auto; }
+    #newsubject-body form > ul > li {
+      display: block;
+      position: relative;
+      clear: both;
+      margin-bottom: 1.81159%; }
+      #newsubject-body form > ul > li:after {
+        content: "";
+        display: block;
+        overflow: hidden;
+        clear: both; }
+  #newsubject-body table {
+    width: 100%; }
+  #newsubject-body label {
+    color: #808080;
+    cursor: pointer; }
+  #newsubject-body input[type="radio"],
+  #newsubject-body .radio {
+    width: 17px;
+    height: 17px; }
+  #newsubject-body .right-layout {
+    float: left; }
+  #newsubject-body .lblname {
+    float: left;
+    font-size: 18px;
+    text-align: right;
+    max-width: 90px;
+    margin-right: 2%; }
+  #newsubject-body .input {
+    height: 27px;
+    width: 40.72464%;
+    border: 1px solid #CFCFCF;
+    outline: none;
+    padding-left: 4px;
+    box-sizing: border-box; }
+  #newsubject-body #editor {
+    width: 90.21739%;
+    float: left; }
+  #newsubject-body .selectItems li {
+    display: inline-block;
+    margin-right: 10px; }
+  #newsubject-body footer {
+    height: 52px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 9999;
+    width: 100%;
+    background: #f1fde7;
+    border-top: 1px solid #b9de9b;
+    border-bottom: 1px solid #b9de9b;
+    padding-right: 7.3913%;
+    box-sizing: border-box;
+    text-align: right;
+    display: table; }
+    #newsubject-body footer > div {
+      display: table-cell;
+      vertical-align: middle; }
+    #newsubject-body footer button {
+      border-radius: 20px;
+      outline: none;
+      border: none;
+      width: 64px;
+      height: 38px;
+      margin-right: 2.02899%;
+      border: 2px solid #caf1ac;
+      background: #b1e793;
+      cursor: pointer;
+      box-sizing: border-box; }
+
+/*# sourceMappingURL=newsubject.css.map */

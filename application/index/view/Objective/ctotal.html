@@ -1,0 +1,331 @@
+<!DOCTYPE >
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>详细统计页</title>
+		<link href="/public/canvas/css/canvas.css" type="text/css" rel="Stylesheet">
+		<link rel="stylesheet" href="/public/canvas/css/optiscroll.css">
+		<link href="/public/canvas/css/iconfont.css" type="text/css" rel="Stylesheet">
+		<link rel="stylesheet" href="/public/canvas/css/green.css" />
+		<script type="text/javascript" src="/public/canvas/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/public/canvas/js/icheck.min.js"></script>
+		<script>
+			//正确答案
+			var correct;
+			//题目id
+			var subjectID;
+			//候选答案
+			var candicate = [];
+
+			var ChartData = {};
+
+			//题目类型
+			var type;
+
+			var _data = [];
+
+			var DrawCanvasHeight = window.innerHeight;
+
+			$(function() {
+
+				var data = {
+					id: getQueryStringByName("id"),
+					path: getQueryStringByName("path")
+				};
+				$.ajax({
+					type: "get",
+					dataType: 'json',
+					url: "/index/getXML",
+					async: true,
+					data: data,
+					success: function(res) {
+						if(res.code == "100") {
+							console.log(res);
+							correct = res.Subject.RightAnswers.RightAnswer; //调接口--正确答案
+							subjectID = res.Subject.SubjectID; //题目id
+							if(res.Subject.CandicatedAnswers.CandicatedAnswer != null) {
+								for(var i = 0; i < res.Subject.CandicatedAnswers.CandicatedAnswer.length; i++) {
+									candicate.push(res.Subject.CandicatedAnswers.CandicatedAnswer[i]);
+									//$(".question-answer").append('<input type="radio" class="question-answer-radio" name="question" value="' + res.Subject.CandicatedAnswers.CandicatedAnswer[i] + '"/>' + res.Subject.CandicatedAnswers.CandicatedAnswer[i]);
+									if(type == 'dxt') {
+										$(".question-answer").append('<input class="styled" id="' + res.Subject.CandicatedAnswers.CandicatedAnswer[i] + '" type="radio" name="iCheck" value="' + res.Subject.CandicatedAnswers.CandicatedAnswer[i] + '"/>' +
+											'<label class="label-select" for="' + res.Subject.CandicatedAnswers.CandicatedAnswer[i] + '">' + res.Subject.CandicatedAnswers.CandicatedAnswer[i] + '</label>' +
+											'</div>')
+									} else if(type == 'duoxt') {
+										$(".question-answer").append('<input id="' + res.Subject.CandicatedAnswers.CandicatedAnswer[i] + '" type="checkbox" class="styled" value="' + res.Subject.CandicatedAnswers.CandicatedAnswer[i] + '"/>' +
+											'<label for="' + res.Subject.CandicatedAnswers.CandicatedAnswer[i] + '">' + res.Subject.CandicatedAnswers.CandicatedAnswer[i] + '</label>' +
+											'</div>')
+									} else {
+										$(".question-answer").append('<input type="radio" id="inlineRadio1" value="Y" name="icheck"><label for="inlineRadio1" class="isright">对 </label><input type="radio" id="inlineRadio2" value="N" name="icheck"><label for="inlineRadio2" class="iserror">错</label>')
+									}
+								}
+								$('input').iCheck({
+									checkboxClass: 'icheckbox_square-green',
+								});
+								$('input').iCheck({
+									radioClass: 'iradio_square-green',
+								});
+							}
+							for(var i = 0; i < candicate.length; i++) {
+								ChartData[candicate[i]] = {
+									count: 0,
+									names: '',
+									data: []
+								}
+							}
+							$("#subject").append(res.Subject.SubjectContex);
+							//																					js_StudentAnswer({ studentID: 7, studentName: "刘焕辉", answers: "A" })
+							//														js_StudentAnswer({ studentID: 5, studentName: "刘焕辉", answers: "A" })
+							//														js_StudentAnswer({ studentID: 1, studentName: "刘焕辉", answers: "A" })
+							//														js_StudentAnswer({ studentID: 11, studentName: "刘焕辉", answers: "A" })
+							//														js_StudentAnswer({ studentID: 221, studentName: "刘焕辉", answers: "A" })
+							//														js_StudentAnswer({ studentID: 1341, studentName: "刘焕辉", answers: "A" })
+							//														js_StudentAnswer({ studentID: 1221, studentName: "刘焕辉", answers: "A" })
+							var num = 0;
+							if($("#subject").find('img').length > 0) {
+								$("#subject img").on("load", function() {
+									num++;
+									if(num == $("#subject img[src!='']").length) {
+										if($("#subject").height() > window.innerHeight) {
+											DrawCanvasHeight = $("#subject").height();
+										}
+										$(this).append('<script type="text/javascript" src="/public/canvas/js/canvas.js"><\/script>');
+										$(this).append('<script type="text/javascript" src="/public/canvas/js/canvasInit.js"><\/script>');
+									}
+								})
+							} else {
+								if($("#subject").height() > window.innerHeight) {
+									DrawCanvasHeight = $("#subject").height();
+								}
+								$('body').append('<script type="text/javascript" src="/public/canvas/js/canvas.js"><\/script>');
+								$('body').append('<script type="text/javascript" src="/public/canvas/js/canvasInit.js"><\/script>');
+							}
+						} else {
+							alert("目录不存在");
+						}
+					}
+				});
+
+				//获取url参数值
+				function getQueryStringByName(name) {
+					var result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+					if(result == null || result.length < 1) {
+						return "";
+					}
+					return result[1];
+				}
+			})
+		</script>
+	</head>
+
+	<body>
+
+		<!--画板-->
+		<div class="palette" id="palette">
+			<!--功能条-->
+			<div id="drawController">
+				<div id="tools-all">
+					<div id="tools-hide"></div>
+					<div id="tools-normal"></div>
+				</div>
+			</div>
+			<!--白板-->
+			<div class="candiv optiscroll" id="container">
+				<div id="content">
+					<canvas id="canvas" style="z-index: 5" horizontalScrollPolicy="on" verticalScrollPolicy="on">浏览器不支持哦，亲</canvas>
+					<!--题目-->
+					<div id="subject"></div>
+					<div style="z-index:-1" id="div_text">
+						<textarea id="text_input" value="" placeholder="输入内容" onblur="dismissFocus()" onpropertychange="this.style.height = this.scrollHeight + 'px';" oninput="this.style.height = this.scrollHeight + 'px';"></textarea>
+					</div>
+					<div style="z-index:-1" id="div_img">
+						<input id="file-3" class="inputfile inputfile-3" type="file" value="" />
+						<label for="file-3" style="outline: none;"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"></path></svg> </label>
+					</div>
+					<div id="box">
+						<dl><img id="preview" draggable="true"></dl>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--颜色选择-->
+		<div id="color_tool" class="color">
+			<input class="i1" type="button">
+			<input class="i2" type="button">
+			<input class="i3" type="button">
+			<input class="i4" type="button">
+			<input class="i5" type="button">
+			<input class="i6" type="button">
+			<input class="i7" type="button">
+			<input class="i8" type="button">
+			<input class="i9" type="button">
+			<input class="i10" type="button">
+			<input class="i11" type="button">
+			<input class="i12" type="button">
+		</div>
+		<!--画笔大小-->
+		<div id="line_size" class="border_nochoose">
+			<div class="line-style"><img src="/public/canvas/images/line_size_1@2x.png" onclick="chooseLineSize(1)" width="6px;" height="6px;"></div>
+			<div class="line-style"><img src="/public/canvas/images/line_size_3@2x.png" onclick="chooseLineSize(3)" width="9px;" height="9px;"></div>
+			<div class="line-style"><img src="/public/canvas/images/line_size_5@2x.png" onclick="chooseLineSize(5)" width="12px;" height="12px;"></div>
+		</div>
+		<!--橡皮擦大小-->
+		<div id="rubber_size" class="border_nochoose">
+			<div class="line-style"><img src="/public/canvas/images/rubber_size_10.png" onclick="chooseRubberSize(10)" width="6px;" height="6px;"></div>
+			<div class="line-style"><img src="/public/canvas/images/rubber_size_20.png" onclick="chooseRubberSize(20)" width="9px;" height="9px;"></div>
+			<div class="line-style"><img src="/public/canvas/images/rubber_size_30.png" onclick="chooseRubberSize(30)" width="12px;" height="12px;"></div>
+		</div>
+		<!--字体大小-->
+		<div id="font_size" class="font">
+			<select id="selected">
+				<option>20</option>
+				<option>24</option>
+				<option>28</option>
+				<option>32</option>
+				<option>36</option>
+				<option>48</option>
+			</select>
+		</div>
+		<div class="show-total" id="hide"><span>隐藏统计</span></div>
+		<div class="show-total" id="show"><span>显示统计</span></div>
+		<div class="total">
+			<div id="bar-main"></div>
+			<!--<div class="total-title">答案分类统计</div>-->
+			<div class="total-content">
+				<span class="yes">正确人数：<span style="color: #a2bf49;text-decoration: underline;" id="ok">0</span></span>
+				<span>错误人数：<span style="color: #e94039;text-decoration: underline;" id="error">0</span></span>
+			</div>
+		</div>
+
+		<div class="show-ques" id="question_s"><span>输入答案</span></div>
+		<div class="show-ques" id="question_h"><span>隐藏答案</span></div>
+		<div class="question">
+			<div class="question-title">选择题</div>
+			<div class="question-answer">
+				<!--<input type="radio" class="styled" id="inlineCheckbox1" value="张1"><label for="inlineCheckbox1" class="label-select">张1</label>
+				<input type="radio" class="styled" id="inlineCheckbox2" value="张2"><label for="inlineCheckbox2" class="label-select">张2</label>
+				<input type="radio" class="styled" id="inlineCheckbox3" value="张3"><label for="inlineCheckbox3" class="label-select">张3</label>
+				<input type="radio" class="styled" id="inlineCheckbox4" value="张4"><label for="inlineCheckbox4" class="label-select">张4</label>-->
+			</div>
+		</div>
+		<script type="text/javascript" src="/public/canvas/js/Animate.js"></script>
+		<script type="text/javascript" src="/public/canvas/js/jquery.optiscroll.js"></script>
+		<script type="text/javascript" src="/public/canvas/js/wheel.js"></script>
+		<script type="text/javascript" src="/public/canvas/js/drag.js"></script>
+		<script type="text/javascript" src="/public/canvas/js/echarts.min.js"></script>
+		<script type="text/javascript" src="/public/canvas/js/jquery.event.ue.js"></script>
+		<script type="text/javascript" src="/public/canvas/js/jquery.udraggable.js"></script>
+		<script>
+			var myChart;
+			var option;
+			var studentAnswers = [];
+
+			$(function() {
+				//显示，隐藏统计
+				$("#show").on("click", function() {
+					$("#hide").show();
+					$("#show").hide();
+					$(".total").show();
+					//					$(".show-total").css("border-radius", 0);
+				})
+				$("#hide").on("click", function() {
+					$("#hide").hide();
+					$("#show").show();
+					$(".total").hide();
+					$(".show-total").css({
+						"border-top-left-radius": 10,
+						"border-bottom-left-radius": 10
+					});
+				})
+
+				$("#question_s").on("click", function() {
+					$(".question").show();
+					$("#question_s").hide();
+					$("#question_h").show();
+					//					$(".show-ques").css("border-radius", 0);
+				})
+				$("#question_h").on("click", function() {
+					$(".question").hide();
+					$("#question_s").show();
+					$("#question_h").hide();
+					$(".show-ques").css({
+						"border-top-left-radius": 10,
+						"border-bottom-left-radius": 10
+					});
+				})
+
+				/**
+				 * 统计图
+				 */
+				// 基于准备好的dom，初始化echarts实例
+				myChart = echarts.init(document.getElementById('bar-main'));
+				// 指定图表的配置项和数据
+				option = {
+					title: {
+						text: '选择人数',
+						textStyle: {
+							fontSize: 14,
+							fontWeight: "normal"
+						}
+					},
+					tooltip: {
+						textStyle: {
+							fontSize: 24,
+							fontWeight: "normal"
+						},
+						formatter: function(params, ticket, callback) {
+							return params.data.names;
+						},
+					},
+					xAxis: {
+						axisLabel: {
+							textStyle: {
+								fontSize: 24
+							},
+						},
+						data: candicate
+					},
+					yAxis: {
+						axisLabel: {
+							textStyle: {
+								fontSize: 24
+							},
+						},
+						splitNumber: 3
+					},
+					series: [{
+						name: '人数',
+						type: 'bar',
+						barWidth: 45,
+						itemStyle: {
+							normal: {
+								color: function(params) {
+									var colorList = [
+										'#C1232B', '#B5C334', '#FCCE10', '#E87C25', '#27727B',
+										'#FE8463', '#9BCA63', '#FAD860', '#F3A43B', '#60C0DD',
+										'#D7504B', '#C6E579', '#F4E001', '#F0805A', '#26C0C0'
+									];
+									return colorList[params.dataIndex]
+								},
+								label: {
+									textStyle: {
+										fontSize: 24
+									},
+									show: true,
+									position: 'top',
+									formatter: '{c}'
+								}
+							}
+						},
+						data: _data
+					}]
+				};
+				// 使用刚指定的配置项和数据显示图表。
+				myChart.setOption(option);
+
+			});
+		</script>
+	</body>
+
+</html>

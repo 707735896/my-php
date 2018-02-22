@@ -1,0 +1,70 @@
+* {
+	font-family: "微软雅黑";
+}
+
+body {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.answerMain {
+	width: 100%;
+	/*height: 100%;*/
+	/*min-width: 1200px;*/
+}
+
+.answerList {
+	width: 50%;
+	height: 397px;
+	float: left;
+	position: relative;
+}
+
+.answerMain .answerList:nth-of-type(odd) {
+	border-right: 10px solid #e7fae4;
+	box-sizing: border-box;
+}
+
+.answer {
+	/*overflow: auto;*/
+	margin: auto;
+	position: absolute;
+	top: -45px;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+
+.studentInfo {
+	color: #24b33f;
+	font-size: 14px;
+	margin-left: 10%;
+	float: left;
+	margin-top: 0.7em;
+}
+
+.studentCZ {
+	float: right;
+	/*margin-left: 30%;*/
+	margin-top: 0.7em;
+}
+
+.studentCZ img {
+	margin-right: 20px;
+	cursor: pointer;
+}
+
+.answerBlord {
+	position: fixed;
+	bottom: 5px;
+	right: -5px;
+}
+
+.answerBlord img {
+	margin-right: 20px;
+	cursor: pointer;
+}
+.container {
+    padding-right: 0;
+    padding-left: 0;
+}

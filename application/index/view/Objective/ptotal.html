@@ -1,0 +1,104 @@
+<!DOCTYPE >
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>统计页</title>
+		<link href="/public/canvas/css/canvas.css" type="text/css" rel="Stylesheet">
+		<style>
+			.main {
+				margin: 100px 0;
+			}
+			
+			.total-div {
+				position: relative;
+				bottom: 100px;
+				left: 10px;
+				width: 100px;
+				cursor: pointer;
+			}
+			
+			.total-num {
+				color: #643605;
+				font-size: 18px;
+				font-weight: bold;
+				text-align: center;
+				margin-bottom: 10px;
+			}
+			
+			.total-result {
+				color: #ff4e00;
+				font-size: 24px;
+				font-weight: bold;
+				text-align: center;
+			}
+			
+			.main-content {
+				float: left;
+				margin: 0 100px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="main"></div>
+		<script type="text/javascript" src="/public/canvas/js/jquery.min.js"></script>
+		<script>
+			$(function() {
+				var data = {
+					id: getQueryStringByName("id"),
+					path: getQueryStringByName("path")
+				};
+
+				//获取url参数值
+				function getQueryStringByName(name) {
+					var result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+					if(result == null || result.length < 1) {
+						return "";
+					}
+					return result[1];
+				}
+
+				var data = [{
+					"id": "1",
+					"title": "第1题",
+					"total": 1,
+				}, {
+					"id": "2",
+					"title": "第2题",
+					"total": 2,
+				}, {
+					"id": "3",
+					"title": "第3题",
+					"total": 3,
+				}, {
+					"id": "4",
+					"title": "第4题",
+					"total": 4,
+				}, {
+					"id": "5",
+					"title": "第5题",
+					"total": 6,
+				}, {
+					"id": "6",
+					"title": "第6题",
+					"total": 6,
+				}, {
+					"id": "7",
+					"title": "第6题",
+					"total": 7,
+				}]
+				for(var i = 0; i < data.length; i++) {
+					$('.main').append('<div class="main-content" id="' + data[i].id + '"><img src="/public/canvas/images/total.png" /><div class="total-div"><div class="total-num">' + data[i].title + '</div><div class="total-result">' + data[i].total + '</div></div></div>')
+
+					$("#" + data[i].id).on('click', function() {
+						var id = $(this).attr("id");
+						console.log(id);
+					})
+				}
+
+			});
+		</script>
+	</body>
+
+</html>

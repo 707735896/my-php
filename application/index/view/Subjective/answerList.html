@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>答案列表 </title>
+		<link rel="stylesheet" href="/public/canvas/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="/public/canvas/css/bootstrap-slider.min.css" />
+		<link href="/public/canvas/css/canvas.css" type="text/css" rel="Stylesheet">
+		<link rel="stylesheet" href="/public/canvas/css/optiscroll.css">
+		<link rel="stylesheet" href="/public/canvas/css/answerList.css" />
+		<link rel="stylesheet" href="/public/canvas/css/player.css" />
+		<link href="/public/canvas/css/iconfont.css" type="text/css" rel="Stylesheet">
+		<link rel="stylesheet" href="/public/canvas/css/tipso.min.css" />
+		<style type="text/css">
+			/*#style-1::-webkit-scrollbar {
+				width: 20px;
+			}
+			
+			#style-1::-webkit-scrollbar-thumb {
+				background-color: #c1c1c1;
+			}
+			*/
+			
+			#drawController input {
+				width: 10px;
+				height: 10px;
+			}
+			
+			.zzsc-content {
+				width: 700px;
+				margin: 50px auto;
+			}
+			
+			#zoomiocontainer {
+				position: absolute;
+				z-index: 1000;
+				overflow: hidden;
+				background: white;
+				visibility: hidden;
+			}
+			
+			#zoomiocontainer img {
+				width: auto !important;
+				height: auto !important;
+				position: absolute !important;
+				display: block !important;
+			}
+			
+			#zoomiocontainer.mobileclass {
+				overflow: scroll;
+				-webkit-overflow-scrolling: touch;
+			}
+		</style>
+	</head>
+
+	<body id="style-1" onselectstart="return false" ondragstart="return false">
+
+		<!--
+			画板
+		-->
+		<div style="position: absolute;top: 0px;left: 0px;height: 100%;width: 100%;display: none;" class="palette" id="palette">
+			<!--功能条-->
+			<div id="drawController">
+				<div id="tools-all">
+					<div id="tools-hide"></div>
+					<div id="tools-normal"></div>
+				</div>
+			</div>
+			<!--白板-->
+			<div class="candiv optiscroll" id="container">
+				<div id="content">
+					<canvas id="canvas" style="z-index: 5" horizontalScrollPolicy="on" verticalScrollPolicy="on">浏览器不支持哦，亲</canvas>
+					<!--题目-->
+					<div id="subject"></div>
+					<div style="z-index:-1" id="div_text">
+						<textarea id="text_input" value="" placeholder="输入内容" onblur="dismissFocus()" onpropertychange="this.style.height = this.scrollHeight + 'px';" oninput="this.style.height = this.scrollHeight + 'px';"></textarea>
+					</div>
+					<div style="z-index:-1" id="div_img">
+						<input id="file-3" class="inputfile inputfile-3" type="file" value="" />
+						<label for="file-3" style="outline: none;"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"></path></svg> </label>
+					</div>
+					<div id="box">
+						<dl><img id="preview" draggable="true"></dl>
+					</div>
+				</div>
+				<div class="answerBlord">
+					<!--<img src='/public/canvas/images/lz.png' onclick="clicklz()">
+					<img src='/public/canvas/images/pj.png' onclick="clickpj()">
+					<img src='/public/canvas/images/sx.png' onclick="clicksx()">-->
+				</div>
+			</div>
+		</div>
+		<!--颜色选择-->
+		<div id="color_tool" class="color">
+			<input class="i1" type="button">
+			<input class="i2" type="button">
+			<input class="i3" type="button">
+			<input class="i4" type="button">
+			<input class="i5" type="button">
+			<input class="i6" type="button">
+			<input class="i7" type="button">
+			<input class="i8" type="button">
+			<input class="i9" type="button">
+			<input class="i10" type="button">
+			<input class="i11" type="button">
+			<input class="i12" type="button">
+		</div>
+		<!--画笔大小-->
+		<div id="line_size" class="border_nochoose" style="left: 62px;">
+			<div class="line-style"><img src="/public/canvas/images/line_size_1@2x.png" onclick="chooseLineSize(1)" width="6px;" height="6px;"></div>
+			<div class="line-style"><img src="/public/canvas/images/line_size_3@2x.png" onclick="chooseLineSize(3)" width="9px;" height="9px;"></div>
+			<div class="line-style"><img src="/public/canvas/images/line_size_5@2x.png" onclick="chooseLineSize(5)" width="12px;" height="12px;"></div>
+		</div>
+		<!--橡皮擦大小-->
+		<div id="rubber_size" class="border_nochoose" style="left: 62px;">
+			<div class="line-style"><img src="/public/canvas/images/line_size_1@2x.png" onclick="chooseRubberSize(10)" width="6px;" height="6px;"></div>
+			<div class="line-style"><img src="/public/canvas/images/line_size_3@2x.png" onclick="chooseRubberSize(20)" width="9px;" height="9px;"></div>
+			<div class="line-style"><img src="/public/canvas/images/line_size_5@2x.png" onclick="chooseRubberSize(30)" width="12px;" height="12px;"></div>
+		</div>
+		<!--字体大小-->
+		<div id="font_size" class="font">
+			<select id="selected">
+				<option>20</option>
+				<option>24</option>
+				<option>28</option>
+				<option>32</option>
+				<option>36</option>
+				<option>48</option>
+			</select>
+		</div>
+		<div class="boxscroll">
+			<div class="answerMain container"></div>
+		</div>
+		<div class="modal fade" id="mymodal" aria-hidden="true" data-backdrop="static">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><img src="/public/canvas/images/close.png" width="28" height="28"/></span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title">笔迹回放：<span class="stuName">赵婉婷</span></h4>
+					</div>
+					<div class="modal-body">
+						<div>
+							<!--input type="button" value="根据数据点重绘" id="btn" /-->
+							<!--<input type="file" name="my-file" id="my-file" onchange="getjsonURL(this)" style="display:inline-block;" />-->
+							<input type="hidden" name="speed" id="speed" value="30" />
+							<input type="hidden" style="width:40px;" name="multiple" id="multiple" value="1" />
+						</div>
+						<div class="canvasParent">
+							<canvas id="myCanvas" width="1200" height="600"></canvas>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<div class="operation">
+							<!--<input type="button" value="播放" id="btn" />-->
+							<!--<input type="button" value="快进" id="fast" />-->
+							<img src="/public/canvas/images/bofang.png" id="btn">
+							<!--<input type="button" value="回到开始" id="restart" />-->
+							<img src="/public/canvas/images/fast.png" id="fast" data-tipso="1X">
+							<img src="/public/canvas/images/chongzhi.png" id="restart">
+						</div>
+						<div id="alltime">00:00:00</div>
+						<div class="fgf">/</div>
+						<input id="ex1" data-slider-id='ex1Slider' style="width:68%;height:17px;display:inline-block;float: left;margin-top: 1%;" type="text" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="0" />
+						<div id="begintime">00:00:00</div>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+		<script type="text/javascript" src="/public/canvas/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/public/canvas/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="/public/canvas/js/bootstrap-slider.min.js"></script>
+		<script type="text/javascript" src="/public/canvas/js/jquery.optiscroll.js"></script>
+		<script type="text/javascript" src="/public/canvas/js/Animate.js"></script>
+		<script type="text/javascript" src="/public/canvas/js/wheel.js"></script>
+		<script type="text/javascript" src="/public/canvas/js/drag.js"></script>
+		<!--<script type="text/javascript" src="/public/canvas/js/zoomio.js"></script>-->
+		<script type="text/javascript" src="/public/canvas/js/tipso.min.js"></script>
+		<script type="text/javascript" src="/public/static/js/jquery.binarytransport.js"></script>
+		<script type="text/javascript" src="/public/canvas/js/jquery.event.ue.js"></script>
+		<script type="text/javascript" src="/public/canvas/js/jquery.udraggable.js"></script>
+		<script type="text/javascript" src="/public/canvas/js/jquery.nicescroll.js"></script>
+		<script>
+			$(function() {
+				var wjb51 = screen.width;
+				if(wjb51 == '1920') {
+					$('#ex1Slider').css('width', '80%');
+				}
+				$('.modal-dialog').css('width', window.innerWidth - 120);
+				$('.modal-content').css('height', window.innerHeight - 10);
+				$('.canvasParent').css('width', window.innerWidth - 130);
+				$('.canvasParent').css('height', window.innerHeight - 167);
+				$('#myCanvas').attr('width', window.innerWidth - 130);
+				$('#myCanvas').attr('height', window.innerHeight - 167);
+				//				$("#mymodal").modal("show");
+				$('.boxscroll').css('height', window.innerHeight);
+				$('#fast').tipso({
+					useTitle: false
+				});
+				$(".boxscroll").niceScroll(".answerMain", {
+					touchbehavior: true
+				});
+			})
+
+			var wScrollY;
+
+			var studentAnswers = [];
+			var DrawCanvasHeight = 0;
+			var previewStudentId;
+
+			//学生答案
+			function js_StudentAnswer(student) {
+				var sub_snapshotAnswers = '/public'+student.snapshotAnswers.match(/public(\S*)/)[1];
+				var sub_answers = '/public'+student.answers.match(/public(\S*)/)[1];
+				$(".answerMain").append('<div class="answerList"><div style="height: 90%">' +
+					'<img src="' + sub_snapshotAnswers + '" width="400" height="300" class="answer" /></div>' +
+					'<div style="height: 10%;background-color: #e7fae4;">' +
+					'<div class="studentInfo">' + student.studentName + '</div><div class="studentCZ"> ' +
+					'<img src="/public/canvas/images/lz.png" onclick=clicklz("' + student.studentID + '","' + student.studentName + '")>' +
+					'<img src="/public/canvas/images/pj.png" onclick=clickpj("' + student.studentID + '")>' +
+					'<img src="/public/canvas/images/fd.png" onclick=clickfd("' + student.studentID + '","' + encodeURIComponent(sub_answers) + '","' + student.studentName + '")>' +
+					'</div></div></div>'
+				);
+				$(".boxscroll").niceScroll().resize();
+				//				var data_s = {
+				//					answerFile: student.snapshotAnswers
+				//				};
+				//
+				//				$.ajax({
+				//					type: "post",
+				//					dataType: 'json',
+				//					url: "/subjective/answercopy",
+				//					async: true,
+				//					data: data_s,
+				//					success: function(res) {
+				//						if(res.code == "100") {
+				//							student.snapshotAnswers = res.path;
+				//							studentAnswers.push(student);
+				//
+				//							//student.answers = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1491027855994&di=868ea448774b56654aaa6c22d8e76d24&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fforum%2Fw%253D580%2Fsign%3D8b12b1f055fbb2fb342b581a7f482043%2Ff531d611728b47106bee4461c3cec3fdfe0323ee.jpg';
+				//							$(".answerMain").append('<div class="answerList"><div style="height: 90%">' +
+				//								'<img src="' + student.snapshotAnswers + '" width="400" height="300" class="answer" /></div>' +
+				//								'<div style="height: 10%;background-color: #e7fae4;">' +
+				//								'<div class="studentInfo">' + student.studentName + '</div><div class="studentCZ"> ' +
+				//								'<img src="/public/canvas/images/lz.png" onclick=clicklz("' + student.studentID + '","' + student.studentName + '")>' +
+				//								'<img src="/public/canvas/images/pj.png" onclick=clickpj("' + student.studentID + '")>' +
+				//								'<img src="/public/canvas/images/fd.png" onclick=clickfd("' + student.studentID + '","' + encodeURIComponent(student.answers) + '","' + student.studentName + '")>' +
+				//								'</div></div></div>'
+				//							);
+				//
+				//							console.log(studentAnswers);
+				//							//								$(".answer").zoomio();
+				//						} else {
+				//							alert("文件拷贝错误！");
+				//						}
+				//					}
+				//				});
+			}
+
+			function clickfd(SubjectiveId, answers, studentName) {
+				wScrollY = window.scrollY;
+				previewStudentId = SubjectiveId || previewStudentId;
+				console.log(SubjectiveId, decodeURIComponent(answers));
+				$('.boxscroll').hide();
+				$("#palette").show();
+				$('.optiscroll-content').scrollTop(0);
+				$("html").scrollTop(0);
+				$(".answerMain").hide();
+				$('.optiscroll-vtrack').css('transform', 'translate(0%, 0%)');
+				$("#subject").append('<img src="' + decodeURIComponent(answers) + '" />');
+				$('.answerBlord').append('<img src="/public/canvas/images/lz.png" onclick=clicklz("' + SubjectiveId + '","' + studentName + '")>' +
+					'<img src="/public/canvas/images/pj.png" onclick=clickpj("' + SubjectiveId + '")>' +
+					'<img src="/public/canvas/images/sx.png" onclick=clicksx()>'
+				);
+				$('.answerBlord').css('z-index', '20');
+				var num = 0;
+				$("#subject img").on("load", function() {
+					num++;
+					if(num == $("#subject img[src!='']").length) {
+						if(window.innerHeight > $("#subject").height()) {
+							DrawCanvasHeight = window.innerHeight;
+						} else {
+							DrawCanvasHeight = $("#subject").height();
+						}
+
+						console.log(DrawCanvasHeight);
+						if($('#canvasInitJS').length <= 0) {
+							$('body').append('<script type="text/javascript" src="/public/canvas/js/answerList.js"><\/script>');
+							$('body').append('<script type="text/javascript" src="/public/canvas/js/answerListInit.js" id="canvasInitJS"><\/script>');
+						}
+					}
+				})
+				//				var data_b = {
+				//					answerFile: decodeURIComponent(answers)
+				//				};
+				//				$.ajax({
+				//					type: "post",
+				//					dataType: 'json',
+				//					url: "/subjective/answercopy",
+				//					async: true,
+				//					data: data_b,
+				//					success: function(res) {
+				//						$("#subject").append('<img src="' + res.path + '" />');
+				//						$('.answerBlord').append('<img src="/public/canvas/images/lz.png" onclick=clicklz("' + SubjectiveId + '","' + studentName + '")>' +
+				//							'<img src="/public/canvas/images/pj.png" onclick=clickpj("' + SubjectiveId + '")>' +
+				//							'<img src="/public/canvas/images/sx.png" onclick=clicksx()>'
+				//						);
+				//						$('.answerBlord').css('z-index', '20');
+				//						var num = 0;
+				//						$("#subject img").on("load", function() {
+				//							num++;
+				//							if(num == $("#subject img[src!='']").length) {
+				//								if(window.innerHeight > $("#subject").height()) {
+				//									DrawCanvasHeight = window.innerHeight;
+				//								} else {
+				//									DrawCanvasHeight = $("#subject").height();
+				//								}
+				//
+				//								console.log(DrawCanvasHeight);
+				//								if($('#canvasInitJS').length <= 0) {
+				//									$('body').append('<script type="text/javascript" src="/public/canvas/js/answerList.js"><\/script>');
+				//									$('body').append('<script type="text/javascript" src="/public/canvas/js/answerListInit.js" id="canvasInitJS"><\/script>');
+				//								}
+				//							}
+				//						})
+				//					}
+				//				});
+			}
+
+			function clicksx() {
+				$('.answerBlord').empty();
+				$('.boxscroll').show();
+				$("#palette").hide();
+				$(".answerMain").show();
+				clearContext();
+				draw_graph("");
+				$('#container').removeClass("pencil circle rubber square line text move").addClass("default");
+				$("#subject").html('');
+				imgi = 0;
+				zoomVal = 1;
+				$(content).css("zoom", zoomVal);
+				$(container).on('scrollstop', function() {
+					draw_graph("");
+				});
+				$('.optiscroll-vtrack').css('transform', 'translate(0%, 0%)');
+				$("html").scrollTop(wScrollY);
+			}
+
+			//						$(function() {
+			//							js_StudentAnswer({
+			//								"answers": "E:\\wamp64\\www\\AppData\\Temp\\images\\Answer.jpg",
+			//								"studentID": "1",
+			//								"studentName": "老刘"
+			//							})
+			//							js_StudentAnswer({
+			//								"answers": "\\\\localhost\\AppData\\Temp\\images\\Answer.jpg",
+			//								"studentID": "2",
+			//								"studentName": "yanghuan"
+			//							})
+			//							js_StudentAnswer({
+			//								"answers": "\\\\localhost\\AppData\\Temp\\images\\Answer.jpg",
+			//								"studentID": "3",
+			//								"studentName": "刘焕辉"
+			//							})
+			//							js_StudentAnswer({
+			//								"answers": "\\\\localhost\\AppData\\Temp\\images\\Answer.jpg",
+			//								"studentID": "4",
+			//								"studentName": "刘辉"
+			//							})
+			//							js_StudentAnswer({
+			//								"answers": "\\\\localhost\\AppData\\Temp\\images\\Answer.jpg",
+			//								"studentID": "5",
+			//								"studentName": "老刘"
+			//							})
+			//						})
+		</script>
+		<script type="text/javascript">
+			var _studentID;
+			var _path;
+			var jsondata;
+			//用requestAnimationFrame可以防止丢帧    使用后无法加速  所以没有使用
+			//window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+			var iswriting = new Boolean();
+			iswriting = false; //是否正在播放的标志 
+			var fatheri = 0; //坐标点 父循环的计数
+			var childj = 0; //坐标点子循环的计数
+			//进度条
+			var progress = 0; //进度条的当前循环数
+			var linelen = 0; //数据总长度     点击开始后根据文件内容计算    之后不再重置或替换或清零
+			var isrestart = new Boolean();
+			isrestart = false; //返回开始按钮的开关   来打断之前的播放
+			var jsonfile = null; //选择的文件
+			var framemultiple = 1; //画面倍数   后期可以用加减号代替   做画面放大缩小     默认给5  大小合适
+			//播放按钮    整个程序的起始
+
+			function js_TrackPlayback(studentID, path) {
+				_studentID = studentID;
+				_path = path;
+			}
+
+			$(function() {
+				$("#btn").click(function() {
+					try {
+						var data = {
+							id: _studentID,
+							path: _path
+						};
+						$.ajax({
+							type: "get",
+							dataType: 'json',
+							url: "/index/getHuiFangUrl", // 得到地址
+							async: true,
+							data: data,
+							success: function(res) {
+								$.ajax({
+									url: res.url,
+									type: "GET",
+									dataType: 'binary',
+									async: true,
+									processData: false,
+									success: function(res) {
+										//2017-8-30  代码块开始
+										if(iswriting) {
+											isrestart = true; //2017-8-29
+											//改变图标为播放样式
+											$("#speed").val("30"); //恢复初始速度
+											$("#multiple").val("1"); //恢复初始速度
+											$("#btn").attr('src', "/public/canvas/images/bofang.png");
+											return;
+										} else {
+											$("#btn").attr('src', "/public/canvas/images/pause.png");
+										}
+
+										//查看进度条是否播放完 
+										if($('#ex1').slider('getValue') != 0 && $('#ex1').slider('getValue') != 100) {
+											isrestart = false;
+											//改变图标为暂停样式
+											$("#btn").attr('src', "/public/canvas/images/pause.png");
+											step();
+											return;
+										}
+
+										//2017-8-30 代码块结束
+										var reader = new FileReader();
+										//将文件以二进制形式读入页面  
+										reader.readAsBinaryString(res);
+										reader.onload = function(f) {
+											jsondata = stringToHex(this.result, 16); //把c++的数据包解析组装成 第一版认识的json
+
+											//								$.getJSON(jsonURL, function(data) {
+											isrestart = false; //打断播放  赋值为可以播放
+											$("#speed").val(30); //恢复初始速度
+											$("#multiple").val(1);
+											//									if(iswriting) {    //2017-8-30注释掉if
+											//										//alert("正在重绘中，请稍候\n如想播放新内容请点击'回到开始'后播放");
+											//										return;
+											//									}
+											linelen = 0;
+											progress = 0;
+											myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+											//									jsondata = data;
+											for(var len = 0; len < jsondata.length; len++) {
+												linelen += jsondata[len]["ListPointF"].length - 1
+											}
+											$alltime.html(MillisecondToDate(linelen * 30));
+											fatheri = 0;
+											childj = 0;
+											//requestAnimationFrame 兼容性不好
+											//requestAnimationFrame(step);
+											$("#btn").attr('src', "/public/canvas/images/pause.png"); //2017-8-30 
+											step(); //用requestAnimationFrame防止丢帧
+										}
+									}
+								});
+
+							}
+						});
+
+					} catch(e) {
+						alert("json文件格式不正确" + "<br/>" + e.toString()); //显示处理后的数据 
+					}
+				})
+
+			});
+
+			function stringToHex(str) {
+
+				var canvasw = myCanvas.width; //画布宽
+				var canvash = myCanvas.height; //画布高
+				//原始坐标点需要放大或缩小的 系数
+				var coefficient = framemultiple * (canvash / 15000);
+				//使画面居中  计算x的偏移量    画布宽减去画面宽度 除二
+				var xplus = (canvasw - (10000 * coefficient)) / 2　　　　
+				var result = new Array();
+				var cjsonlistpoint = new Object();
+				var cjsonarr = new Array();
+				var cjsondata;
+				/*	Header Format, total size 72 Bytes, All in dec ASCII:
+					{
+						20 Bytes - TimeStamp for create, T20171110130455200, yyMMddhhmmsszzz, unit is ms
+						16 Bytes - TimeStamp for last modify
+						 8 Bytes - dataCounts
+						 8 Bytes - Boundary_Left, range(0, 10000)
+						 8 Bytes - Boundary_Right, range(0, 10000)
+						 8 Bytes - Boundary_Top, range(0, 15000)
+						 8 Bytes - Boundary_Bottom, range(0, 15000)
+					}
+				*/
+
+				/*  Data format, total size  Bytes, all in dec ASCII:
+					{
+						18 Bytes - TimeStamp, xxx unit is ms	T20171110130455200
+						 4 Bytes - Type, "tip_" or "hov_"
+						 8 Bytes - x pos
+						 8 Bytes - y pos
+					}
+				*/
+				for(var i = 77; i < str.length; i = i + 38) { //一次循环是一组数据  包括时间、类型、 x、y
+					//目前时间不做参考  所以跳过
+					if(str.substring(i + 17, i + 21) == "tip_") //点下
+					{
+						cjsondata = new Object();
+						cjsondata.X = parseFloat((parseInt(str.substring(i + 21, i + 29)) * (coefficient)).toFixed(2)) + xplus; //x
+						cjsondata.Y = parseFloat((parseInt(str.substring(i + 29, i + 37)) * (coefficient)).toFixed(2)); //y
+						cjsonarr.push(cjsondata);
+					}
+					if(str.substring(i + 17, i + 21) == "hov_") //悬空点不计数   并且把之前的点数组 放到list里
+					{
+						if(cjsonarr.length != 0) {
+							cjsonlistpoint.ListPointF = cjsonarr;
+							result.push(cjsonlistpoint);
+							cjsonlistpoint = new Object();
+							cjsonarr = new Array();
+						}
+					}　　　　
+				}　　　　
+				return result;　　
+			}
+
+			function countpoint(a, b, c, d) {
+				if(a.length == 1) a = "0" + a;
+				if(b.length == 1) b = "0" + b;
+				if(c.length == 1) c = "0" + c;
+				if(d.length == 1) d = "0" + d;
+				return(parseInt(d + "" + c + "" + b + "" + a, 16) / (100 / framemultiple)).toFixed(2);
+			}
+			//加速  把间隔缩小  对应倍数的显示值翻倍
+			$(function() {
+				$("#fast").click(function() {
+					if($("#multiple").val() < 16) { //小于16就再加倍
+						$("#speed").val($("#speed").val() / 2)
+						$("#multiple").val($("#multiple").val() * 2)
+						var tipso_data = $("#multiple").val() + 'X';
+						$("#fast").eq(0).data('tipso', tipso_data);
+					} else alert("已到最快速度")
+				})
+
+			});
+			//回到起点    清空页面 初始化所有变量
+			$(function() {
+				$("#restart").click(function() {
+					progress = 0; //进度条
+					myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); //画板清空
+					$("#ex1").slider().slider('setValue', 0); //恢复初始速度
+					$("#speed").val("30"); //恢复初始速度
+					$("#multiple").val("1");
+					$begintime.html(MillisecondToDate(0)); //开始时间归零
+					isrestart = true; //打断播放
+					$("#btn").attr('src', "/public/canvas/images/bofang.png");
+				})
+
+				$('.close').on('click', function() {
+					progress = 0; //进度条
+					myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); //画板清空
+					$("#ex1").slider().slider('setValue', 0); //恢复初始速度
+					$("#speed").val("30"); //恢复初始速度
+					$("#multiple").val("1");
+					$begintime.html(MillisecondToDate(0)); //开始时间归零
+					isrestart = true; //打断播放
+					$("#btn").attr('src', "/public/canvas/images/bofang.png");
+				})
+			});
+			var timeouts; //创建变量 因为跳到指定时间后  需要把之前的timeout全部取消 (解决跳到指定时间后  播放越来越快的bug)
+			//主要循环打印函数
+			function step(timestamp) {
+				timeouts = setTimeout(function() {
+					try {
+						iswriting = true;
+						if(jsondata[fatheri]["ListPointF"].length - 1 <= childj) {
+							fatheri += 1;
+							childj = 0;
+						}; //如果子循环结束了  那么父循环加一 子循环归零
+
+						if(fatheri < jsondata.length && childj < jsondata[fatheri]["ListPointF"].length) { //2017-8-30 删除&& !isrestart    .length-1 改为 .length
+							if(childj < jsondata[fatheri]["ListPointF"].length - 1) { //打印的时候拿的是当前点和下一个点  所以打印只能执行到倒数第二个点
+								drawline(jsondata[fatheri]["ListPointF"][childj]["X"], jsondata[fatheri]["ListPointF"][childj]["Y"], jsondata[fatheri]["ListPointF"][childj + 1]["X"], jsondata[fatheri]["ListPointF"][childj + 1]["Y"], myContext)
+								progress += 1;
+								$begintime.html(MillisecondToDate(progress * 30));
+								$("#ex1").slider().slider('setValue', (progress / linelen * 100)); //进度条进度
+								if(progress == linelen) { //2017-8-30 增加if方法
+									isrestart = true; //暂停
+									$("#btn").attr('src', "/public/canvas/images/bofang.png"); //走到最后  把按钮变为播放   给
+								}
+							}
+							//requestAnimationFrame(step);
+							if(!isrestart) step(); //2017-8-30 增加if else方法   原先直接执行step();
+							else iswriting = false;
+						} else {
+							iswriting = false;
+						}
+						childj += 1;
+					} catch(e) {
+						iswriting = false; //2017-8-30 抛出异常的时候要 给改变播放状态
+//						alert(e.toString()); //显示处理后的数据 
+					}
+				}, $("#speed").val()); //控制速度
+			}
+		</script>
+		<script type="text/javascript">
+			var myCanvas = document.getElementById("myCanvas");
+			var myContext = myCanvas.getContext("2d");
+			var jsonURL = ""; //选择的文件地址
+			$begintime = $("#begintime");
+			$alltime = $("#alltime");
+			//鼠标移动到进度条上的回调显示
+			$('#ex1').slider({
+				formatter: function(value) {
+					return MillisecondToDate(getwhere(value)["num"] * 30);
+				}
+			});
+			//时间轴滑动触发
+			$('#ex1').on("slide", function(slideEvt) {
+				gotopoint(slideEvt);
+			});
+			//时间轴点击触发
+			$('#ex1').on("slideStart", function(slideEvt) {
+				gotopoint(slideEvt);
+			});
+
+			function gotopoint(newslider) {
+				if(Math.abs(newslider.value - (progress / linelen * 100)) > 2) { //滑动到的位置和当前  大于2(播放移动  一次移动+1  所以认为正负2为拖动)
+					myContext.clearRect(0, 0, myCanvas.width, myCanvas.height); //画板清空
+					$("#speed").val("30"); //恢复初始速度
+					$("#multiple").val("1"); //恢复初始速度
+					//					isrestart = true; //打断播放
+					clearTimeout(timeouts) //清空timeout  解决点击越多 播放越快bug
+					//然后计算得到 点击位置是第多少包数据   
+					drawbyiandj(newslider.value);
+				}
+			}
+			//根据点击点画出对应图  然后调用step
+			function drawbyiandj(newporint) {
+				var info = getwhere(newporint);
+				var inum = info["inum"];
+				var jnum = info["jnum"];
+				progress = info["num"]; //把循环到的次数   赋值给全局变量
+				for(fatheri = 0; fatheri <= inum; fatheri++) {
+					for(childj = 0; childj < jsondata[fatheri]["ListPointF"].length - 1; childj++) {
+						if(fatheri == inum && childj == jnum) { //最后一次循环中  j等于jnum 循环结束  其他情况画图
+							break;
+						} else {
+							drawline(jsondata[fatheri]["ListPointF"][childj]["X"], jsondata[fatheri]["ListPointF"][childj]["Y"], jsondata[fatheri]["ListPointF"][childj + 1]["X"], jsondata[fatheri]["ListPointF"][childj + 1]["Y"], context)
+						}
+					}
+					if(fatheri == inum && childj == jnum) { //不在此进行判断跳出    最后会+1  然后for循环判断不符合  再弹出（那样实际的值就大一了）
+						break;
+					}
+				}
+				//				isrestart = false; //之前拖拽时 打断了播放 现在赋值为可以播放
+				step(); //把拖拽到的位置之前的画好了   继续迭代作画
+			}
+			//根据点击位置  算出当前位置的点所属i,j 和已循环次数num
+			function getwhere(newporint) {
+				var inum = 0; //父级位置
+				var jnum = 0; //子集位置
+				var num = 0; //当前循环加的个数
+				if(newporint != 0) {
+					var isbreak = new Boolean(); //找到指定位置跳出
+					isbreak = false; //是否正在播放的标志 
+					for(var ilen = 0; ilen < jsondata.length; ilen++) {
+						inum = ilen;
+						for(var jlen = 0; jlen < jsondata[ilen]["ListPointF"].length - 1; jlen++) {
+							jnum = jlen;
+							num++;
+							if((num / linelen * 100).toFixed(0) == newporint) {
+								isbreak = true; //告诉外循环找到了
+								break; //找到位置跳出
+							}
+						}
+						if(isbreak) break;
+					}
+				}
+				return {
+					"inum": inum,
+					"jnum": jnum,
+					"num": num,
+				};
+			}
+			//获取选择文件位置(网上找的)
+			function getjsonURL(node) {
+
+				try {
+					if(node.files && node.files[0]) {
+						jsonfile = node.files[0];
+					} else if(node.files && node.files.item(0)) {
+						jsonfile = node.files.item(0);
+					}
+					//Firefox 因安全性问题已无法直接通过input[jsonfile].value 获取完整的文件路径  
+					try {
+						//Firefox7.0   
+						jsonURL = jsonfile.getAsDataURL();
+						//alert("//Firefox7.0"+imgRUL);                           
+					} catch(e) {
+						//Firefox8.0以上                                
+						jsonURL = window.URL.createObjectURL(jsonfile);
+						//alert("//Firefox8.0以上"+imgRUL);  
+					}
+				} catch(e) { //这里不知道怎么处理了，如果是遨游的话会报这个异常                   
+					//支持html5的浏览器,比如高版本的firefox、chrome、ie10  
+					if(node.files && node.files[0]) {
+						var reader = new FileReader();
+						reader.onload = function(e) {
+							jsonURL = e.target.result;
+						};
+						reader.readAsDataURL(node.files[0]);
+					}
+				}
+				return jsonURL;
+			}
+			//根据毫秒  算出时分秒
+			function MillisecondToDate(msd) {
+				var time = parseFloat(msd) / 1000;
+				if(null != time && "" != time) {
+					if(time > 60 && time < 60 * 60) { //大于一分钟  小于一小时
+						time = "00:" + addzero(parseInt(time / 60.0)) + ":" + addzero(parseInt((parseFloat(time / 60.0) -
+							parseInt(time / 60.0)) * 60));
+					} else if(time >= 60 * 60 && time < 60 * 60 * 24) { //大于一小时   小于24小时
+						time = addzero(parseInt(time / 3600.0)) + ":" + addzero(parseInt((parseFloat(time / 3600.0) -
+								parseInt(time / 3600.0)) * 60)) + ":" +
+							addzero(parseInt((parseFloat((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) -
+								parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)) * 60));
+					} else { //小于一分钟 
+						time = "00:00:" + addzero(parseInt(time));
+					}
+				} else {
+					time = "00:00:00 ";
+				}
+				return time;
+			}
+			//对数字补零
+			function addzero(number) {
+				return number < 10 ? "0" + number : number;
+			}
+			//画图的基本函数    传入起始位置  结束位置  和画板
+			function drawline(oldx, oldy, newx, newy, myContext) {
+				myContext.beginPath();
+				myContext.lineWidth = 2;
+				myContext.moveTo(oldx, oldy); //将画笔移到x0,y0处
+				myContext.lineTo(newx, newy); //从x0,y0到x1,y1画一条线
+				myContext.stroke(); //画线
+			}
+			
+			//缩放
+			function js_zoomFactor(zoom) {
+				zoomVal = zoom;
+				imgi = (zoomVal - 1) * 10;
+				$(content).css("zoom", zoomVal);
+			}
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,277 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+ul {
+	list-style: none;
+}
+
+input {
+	outline: none;
+	border: none;
+}
+
+#newsubject-body {
+	font-size: 18px;
+	max-width: 1580px;
+	font-family: "Microsoft YaHei";
+	margin: auto;
+	padding-top: 2.27848%;
+	box-sizing: border-box;
+}
+
+#newsubject-body form {
+	width: 87.34177%;
+	margin: auto;
+}
+
+#newsubject-body form>ul>li {
+	display: block;
+	position: relative;
+	clear: both;
+	margin-bottom: 1.81159%;
+}
+
+#newsubject-body form>ul>li:after {
+	content: "";
+	display: block;
+	overflow: hidden;
+	clear: both;
+}
+
+#newsubject-body table {
+	width: 100%;
+}
+
+#newsubject-body label {
+	color: #808080;
+}
+
+.label-select {
+	margin-left: 5px;
+	font-size: 16px;
+	cursor: pointer;
+	vertical-align: middle;
+	margin-top: -2px;
+	margin-bottom: 1px;
+}
+
+#newsubject-body input[type="radio"],
+#newsubject-body .radio {
+	width: 17px;
+	height: 17px;
+}
+
+#newsubject-body .right-layout {
+	float: left;
+}
+
+#newsubject-body .lblname {
+	float: left;
+	font-size: 18px;
+	text-align: right;
+	max-width: 90px;
+	margin-right: 2%;
+	font-weight: normal;
+	margin-bottom: 0;
+}
+
+#newsubject-body .input {
+	font-size: 18px;
+	height: 27px;
+	width: 40.72464%;
+	/*border: 1px solid #CFCFCF;*/
+	outline: none;
+	padding-left: 4px;
+	box-sizing: border-box;
+}
+
+#newsubject-body #editor {
+	width: 90.21739%;
+	float: left;
+}
+
+#newsubject-body .selectItems li {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+#newsubject-body footer {
+	height: 52px;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	z-index: 9999;
+	width: 100%;
+	background: #f1fde7;
+	border-top: 1px solid #b9de9b;
+	border-bottom: 1px solid #b9de9b;
+	padding-right: 7.3913%;
+	box-sizing: border-box;
+	text-align: right;
+	display: table;
+}
+
+#newsubject-body footer>div {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+#newsubject-body footer button {
+	border-radius: 20px;
+	outline: none;
+	border: none;
+	width: 64px;
+	height: 38px;
+	margin-right: 2.02899%;
+	border: 2px solid #caf1ac;
+	background: #b1e793;
+	cursor: pointer;
+	box-sizing: border-box;
+}
+
+
+/*# sourceMappingURL=newsubject.css.map */
+
+#input-title {
+	color: #e94939;
+}
+
+.CheckBoxSelectItemsUL input {
+	margin-right: 5px;
+}
+
+.CheckBoxSelectItemsUL li input {
+	margin-right: 5px;
+}
+
+@charset "UTF-8";
+.student-li {
+	height: 60px;
+}
+
+#attachmentListUL {
+	/*padding-top: 10px;*/
+	overflow: hidden;
+	/*clear: both;*/
+	width: 85%;
+}
+
+#attachmentListUL li {
+	width: 25%;
+	margin-bottom: 5px;
+	float: left;
+}
+
+#attachmentListUL li span {
+	float: left;
+	margin-right: 5px;
+	color: #64d377;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+#attachmentListUL li .del-btn {
+	cursor: pointer;
+}
+
+.student-lists {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+}
+
+.student-lists .CheckBoxSelectItemsUL {
+	width: 86.5%;
+	clear: both;
+	position: relative;
+	height: 66px;
+	overflow-y: scroll;
+	margin-left: 100px;
+}
+
+.student-lists .CheckBoxSelectItemsUL li {
+	margin-right: 20px;
+	text-align: center;
+	display: inline-block;
+	/*line-height: 35px;*/
+	width: 9%;
+	position: relative;
+	font-size: 14px;
+	color: #808080;
+}
+
+.student-lists .CheckBoxSelectItemsUL li .close-btn {
+	position: absolute;
+	top: -5px;
+	font-size: 25px;
+	right: 0;
+	color: #f65a34;
+	cursor: pointer;
+}
+
+.student-lists .select-more {
+	position: absolute;
+	right: 2%;
+	top: 30%;
+	cursor: pointer;
+}
+
+.activity-ms {
+	min-height: 500px;
+	width: 85%;
+	float: left;
+	border: 1px solid #EEEEEE;
+	padding: 10px;
+}
+
+.activity-ms img {
+	display: block;
+	margin: 10px auto;
+}
+
+.activity-ms span {
+	word-wrap: break-word
+}
+
+
+/**
+     * 选择附件
+ */
+
+.sellectfile {
+	width: 90%;
+}
+
+.sellectfile .sellectfile-box {
+	width: 95%;
+	padding: 0 5px;
+	box-sizing: border-box;
+	float: left;
+	font-size: 12px;
+	border: 1px solid #CFCFCF;
+	color: #a5a0a0;
+	height: 30px;
+	line-height: 30px;
+	position: relative;
+}
+
+.sellectfile .sellectfile-box input {
+	opacity: 0;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	cursor: pointer;
+	left: 0;
+}
+
+.sellectfile .selectfile-btn {
+	cursor: pointer;
+	float: right;
+}
+
+
+/*# sourceMappingURL=ClassroomActivities.css.map */

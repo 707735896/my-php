@@ -1,0 +1,55 @@
+#newsubject-body .lblname {
+    width: 90px;
+}
+
+.inputfile-btn {
+    display: inline-block;
+    width: 40px;
+    line-height: 25px;
+    height: 25px;
+    background: url("../images/selectfile.png") no-repeat;
+    background-size: contain;
+    position: absolute;
+    cursor: pointer;
+    margin-left: 15px;
+    overflow: hidden;
+    input {
+  
+         outline: none;
+       position: absolute; top: 0px; right: 0px;  opacity:0; cursor: pointer;
+    }
+}
+@mixin Calc($property, $px-values, $baseline-width:1380) {
+    #{$property}: $px-values/$baseline-width*100%;
+}
+#preview-right {
+    margin-left: 90px;
+    @include Calc( 'width',1305px,1380px);
+    height: 445px;
+    position: relative;
+    .left,
+    .right {
+        display: inline-block;
+        position: relative;
+        text-align: center;
+        @include Calc( 'width',645px,1305px);
+        >p {
+            margin-top: 20px;
+        }
+        .box {
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            overflow-y: auto;
+            display: block;
+            height: 100%;
+            img {
+                max-width: 100%;
+                display: block;
+                margin: auto;
+            }
+        }
+    }
+    .right {
+        float: right;
+    }
+}
